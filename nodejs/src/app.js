@@ -1,7 +1,7 @@
 const express = require("express");
 
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 
 app.use(express.json());
 
@@ -18,7 +18,7 @@ app.post("/", (req, res) => {
 app.listen(PORT, (error) => {
   if (!error)
     console.log(
-      "Server is successfully running, and app is listening on port " + PORT
+      "Server is successfully running, try to access http://localhost:" + PORT
     );
   else console.log("Error occurred, server can't start", error);
 });
