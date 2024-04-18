@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { BACKEND_URL } from "./configs/configs";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  const [lang, setLang] = useState("en");
+  const [name, setName] = useState();
+  const [hello, setHello] = useState();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const response = await fetch(`${BACKEND_URL}/hello?name=${name}&lang=${lang}`);
+    setHello(await response.text());
+  };
+
+  return hello ? (
+    <div>
+      <h1>{hello}</h1>
+      <button onClick={() => setHello(null)}>Back</button>
     </div>
+  ) : (
+    <form onSubmit={handleSubmit}>
+      <select value={lang} onChange={(e) => setLang(e.target.value)}>
+        <option value="en">English</option>
+        <option value="vi">Vietnamese</option>
+      </select>
+      <input type="text" placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} />
+      <button type="submit">Summit</button>
+    </form>
   );
 }
 

@@ -1,0 +1,48 @@
+version: "3.4"
+
+services:
+  db:
+    image: mongo
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_PASS}
+      ME_CONFIG_MONGODB_SERVER: db
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASSWORD}
+    depends_on:
+      - db
+  backend:
+    image: app/backend
+    build:
+      context: ${NODE_APP_PATH}
+    environment:
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASS=${MONGO_PASS}
+      - MONGO_DB=${MONGO_DB}
+    ports:
+      - "3001:3001"
+    restart: always
+    depends_on:
+      - db
+  frontend:
+    image: app/frontend
+    build:
+      context: ${REACT_APP_PATH}
+    restart: always
+    ports:
+      - "80:80"
+volumes:
+  mongo_data:
+    name: mongo_data
