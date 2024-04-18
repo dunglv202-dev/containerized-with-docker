@@ -8,5 +8,5 @@
 
 # Notes
 
-- `nginx.conf` is nginx configuration file
-- `mongo-init.js` contains initialization scripts for MongoDB
+- `frontend/nginx.conf` is nginx configuration file
+- `docker/mongo-init.js` contains initialization scripts for MongoDB
